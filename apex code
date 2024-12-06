@@ -1,0 +1,138 @@
+Apex Trigger and Handler Class
+How to create a new trigger :
+
+While still in the trailhead account, navigate to the gear icon in the top right corner.
+
+Click on developer console and you will be navigated to a new console window.
+
+Click on the File menu in the toolbar, and click on new? Trigger.
+
+Enter the trigger name and the object to be triggered.
+
+
+
+
+
+Syntax For creating trigger :
+
+
+The syntax for creating trigger is :
+
+
+Trigger [trigger name] on [object name]( Before/After event)
+
+{
+
+
+}
+
+
+
+
+
+
+Trigger code:
+
+
+trigger LaptopBooking on Laptop_Bookings__c (After insert,after update) {
+
+ 
+
+    if(trigger.isAfter && ( trigger.isInsert || trigger.isupdate))
+
+    {
+
+    LaptopBookingHandler.sendEmailNotification(trigger.new);
+
+        }
+
+
+
+}
+
+
+
+Note:- copy the API names
+
+1.LaptopBooking - trigger name
+
+2.Laptop_Bookings__c -as per your org(go to laptop bookings object and copy from that object api name).
+
+
+
+
+
+Handler Class:
+
+
+
+
+Code Snippet : 
+
+
+
+public class LaptopBookingHandler {
+
+    public static void sendEmailNotification (List<Laptop_Bookings__c> lapList){
+
+        for(Laptop_Bookings__c lap:lapList)
+
+        {
+
+            Messaging.SingleEmailMessage email = new Messaging.SingleEmailMessage();
+
+                email.setToAddresses( new List<String>{lap.Email__c});
+
+                email.setSubject('Welcome to our company');
+
+             string body = 'Dear Customer, \n';
+
+             body += 'Welcome to Laptop Rentals! You have been seen as a valuable customer to us.\n Please continue your journey with us, while we try to provide you with good quality resources. \n Laptop Amount = ' + lap.Amount__c + ' \n core type = '+lap.core_type__c +' \n Laptop type = '+lap.Laptop_name__c;
+
+             email.setPlainTextBody(body);
+
+                Messaging.sendEmail(new List<Messaging.SingleEmailMessage>{email});
+
+
+        }
+
+    }
+
+}
+
+
+Note:- 
+
+
+1.Class name:- LaptopBookingHandler
+
+2.API Name:- Laptop_Bookings__c(as per your org go to laptop booking object and copy from that).
+
+3.core__c (as per your org go to laptop booking object and copy from that).
+
+4.Laptop_type__c.(as per your org go to laptop booking object and copy from that).
+
+
+
+
+
+
+
+
+:
+
+
+
+
+Triggers :
+
+
+A trigger is a set of Apex code that runs before or after DML(Data Manipulation Language) events.
+
+A DML event could be a variety of data processing tasks that include the standard insert, update, and delete commands.
+
+With Apex triggers, you can automate tasks that would otherwise be nearly impossible to accomplish using only the Salesforce user interface. Triggers enable you to create custom scripts that you can implement according to your needs, and the only limitation is your coding skills.
+
+There are two Salesforce Apex trigger types:
+
+Before triggers. These are helpful in cases that require a validation process before accepting a change. They run before any database changes. After triggers. These are helpful in cases where you need to modify your database records and when the necessary value is stored in other records. They run after any database changes. Both types will help you perform custom tasks and manage records effectively. They can help you perform bulk actions as they can handle several rec
